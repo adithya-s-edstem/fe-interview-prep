@@ -34,6 +34,6 @@ Open http://localhost:5173. The menu at the top links to one page per question; 
 | 2   | Infinite Feed                 | [#22](https://github.com/adithya-s-edstem/fe-interview-prep/pull/22) |
 | 3   | Kanban Board                  | [#21](https://github.com/adithya-s-edstem/fe-interview-prep/pull/21) |
 | 4   | Live Dashboard                | [#24](https://github.com/adithya-s-edstem/fe-interview-prep/pull/24) |
-| 5   | Comments with Offline Support |                                                                      |
+| 5   | Comments with Offline Support | [#23](https://github.com/adithya-s-edstem/fe-interview-prep/pull/23) |
 
 Requirements, architecture and decision records live in [docs/](docs/README.md).
