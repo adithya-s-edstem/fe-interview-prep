@@ -1,0 +1,42 @@
+.card,
+.draggingCard {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: #ffffff;
+  padding: var(--space-4);
+}
+
+.draggingCard {
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 8px 24px rgb(31 35 40 / 20%);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+.handle {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  cursor: grab;
+  padding: var(--space-1) var(--space-2);
+  min-width: 44px;
+  min-height: 44px;
+  touch-action: none;
+  color: var(--color-text);
+  font-size: 1.25rem;
+}
+
+.handle:hover {
+  background: var(--color-hover);
+}
