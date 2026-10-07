@@ -1,15 +1,17 @@
-import { useId } from 'react';
+import { type Ref, useId } from 'react';
 import type { CartItem } from '../domain/CartItem';
 import { formatCents } from '../domain/formatCents';
 import styles from './CartItemRow.module.css';
 
 type CartItemRowProps = {
   item: CartItem;
+  removeButtonRef: Ref<HTMLButtonElement>;
   onQuantityChange: (productId: number, quantity: number) => void;
   onRemove: (productId: number) => void;
 };
 
-export function CartItemRow({ item: { product, quantity }, onQuantityChange, onRemove }: CartItemRowProps) {
+export function CartItemRow({ item: { product, quantity }, removeButtonRef, ...handlers }: CartItemRowProps) {
+  const { onQuantityChange, onRemove } = handlers;
   const titleId = useId();
   return (
     <li className={styles.row} aria-labelledby={titleId}>
@@ -36,7 +38,12 @@ export function CartItemRow({ item: { product, quantity }, onQuantityChange, onR
           +
         </button>
       </span>
-      <button type="button" aria-label={`Remove ${product.title}`} onClick={() => onRemove(product.id)}>
+      <button
+        ref={removeButtonRef}
+        type="button"
+        aria-label={`Remove ${product.title}`}
+        onClick={() => onRemove(product.id)}
+      >
         Remove
       </button>
     </li>

@@ -1,5 +1,6 @@
 import type { CartItem } from '../domain/CartItem';
 import type { CartTotals } from '../domain/CartTotals';
+import { useRemoveWithFocus } from '../hooks/useRemoveWithFocus';
 import { CartItemRow } from './CartItemRow';
 import styles from './CartPanel.module.css';
 import { CartSummary } from './CartSummary';
@@ -15,9 +16,12 @@ type CartPanelProps = {
 };
 
 export function CartPanel({ cartItems, totals, discountCode, ...handlers }: CartPanelProps) {
+  const { headingRef, removeButtonRef, removeAndMoveFocus } = useRemoveWithFocus(cartItems, handlers.onRemove);
   return (
     <section className={styles.panel} aria-labelledby="cart-heading">
-      <h2 id="cart-heading">Cart</h2>
+      <h2 id="cart-heading" ref={headingRef} tabIndex={-1}>
+        Cart
+      </h2>
       {cartItems.length === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
@@ -27,8 +31,9 @@ export function CartPanel({ cartItems, totals, discountCode, ...handlers }: Cart
               <CartItemRow
                 key={item.product.id}
                 item={item}
+                removeButtonRef={removeButtonRef(item.product.id)}
                 onQuantityChange={handlers.onQuantityChange}
-                onRemove={handlers.onRemove}
+                onRemove={removeAndMoveFocus}
               />
             ))}
           </ul>

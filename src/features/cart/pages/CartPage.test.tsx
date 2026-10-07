@@ -22,7 +22,7 @@ function cartTotals() {
 
 async function addToCart(title: string) {
   const card = await productCard(title);
-  await userEvent.click(card.getByRole('button', { name: 'Add to cart' }));
+  await userEvent.click(card.getByRole('button', { name: `Add ${title} to cart` }));
 }
 
 describe('CartPage', () => {
@@ -101,9 +101,55 @@ describe('CartPage', () => {
 
     const increase = cart().getByRole('button', { name: 'Increase quantity of Hand Cream' });
     await user.click(increase);
+    await user.click(increase);
 
-    expect(increase).toBeDisabled();
+    expect(increase).toHaveAttribute('aria-disabled', 'true');
     expect(cart().getByRole('listitem', { name: 'Hand Cream' })).toHaveTextContent('Quantity 2');
+  });
+
+  it('keeps the increase button focusable for keyboard users when the quantity reaches the stock', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<CartPage />);
+    await addToCart('Hand Cream');
+
+    const increase = cart().getByRole('button', { name: 'Increase quantity of Hand Cream' });
+    await user.click(increase);
+
+    expect(increase).toBeEnabled();
+  });
+
+  it('lists cart items in the order they were added', async () => {
+    renderWithProviders(<CartPage />);
+
+    await addToCart('Mascara');
+    await addToCart('Lip Balm');
+
+    const [firstItem, secondItem] = cart().getAllByRole('listitem');
+    expect(firstItem).toHaveAccessibleName('Mascara');
+    expect(secondItem).toHaveAccessibleName('Lip Balm');
+  });
+
+  it('moves keyboard focus to the next item after an item is removed', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<CartPage />);
+    await addToCart('Lip Balm');
+    await addToCart('Mascara');
+
+    cart().getByRole('button', { name: 'Remove Lip Balm' }).focus();
+    await user.keyboard('{Enter}');
+
+    expect(cart().getByRole('button', { name: 'Remove Mascara' })).toHaveFocus();
+  });
+
+  it('moves keyboard focus to the Cart heading after the last item is removed', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<CartPage />);
+    await addToCart('Mascara');
+
+    cart().getByRole('button', { name: 'Remove Mascara' }).focus();
+    await user.keyboard('{Enter}');
+
+    expect(screen.getByRole('heading', { name: 'Cart' })).toHaveFocus();
   });
 
   it('takes a removed item out of the cart and out of the totals', async () => {
