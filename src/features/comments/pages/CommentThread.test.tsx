@@ -127,6 +127,24 @@ describe('comment thread', () => {
     expect(await textsStoredOnServer()).toEqual(['Try again']);
   });
 
+  it('keeps a failed comment with its retry button after a page refresh', async () => {
+    const user = userEvent.setup();
+    const page = openCommentsPage();
+    await waitFor(() => expect(screen.queryByText('Loading comments…')).not.toBeInTheDocument());
+    network.failNextRequest();
+    await postComment(user, 'Still here');
+    await screen.findByText('Failed');
+
+    refreshPage(page);
+
+    await waitFor(() => expect(comments()).toHaveLength(1));
+    expect(comments()[0]).toHaveTextContent('Still here');
+    expect(comments()[0]).toHaveTextContent('Failed');
+    await user.click(screen.getByRole('button', { name: 'Retry' }));
+    await waitUntilEveryCommentIsSent(1);
+    expect(await textsStoredOnServer()).toEqual(['Still here']);
+  });
+
   it('queues comments while offline and sends them in order, once each, when back online', async () => {
     const user = userEvent.setup();
     openCommentsPage();

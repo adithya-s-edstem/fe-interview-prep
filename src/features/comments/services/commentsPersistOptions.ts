@@ -4,6 +4,7 @@ import type { PersistQueryClientOptions } from '@tanstack/react-query-persist-cl
 import { pauseInFlightSends } from './pauseInFlightSends';
 
 const saveOnEveryChange = 0;
+const unconfirmedStatuses: readonly Mutation['state']['status'][] = ['pending', 'error'];
 
 export const commentsPersistOptions: Omit<PersistQueryClientOptions, 'queryClient'> = {
   persister: createAsyncStoragePersister({
@@ -13,6 +14,6 @@ export const commentsPersistOptions: Omit<PersistQueryClientOptions, 'queryClien
     serialize: (client) => JSON.stringify(pauseInFlightSends(client)),
   }),
   dehydrateOptions: {
-    shouldDehydrateMutation: (mutation: Mutation) => mutation.state.status === 'pending',
+    shouldDehydrateMutation: (mutation: Mutation) => unconfirmedStatuses.includes(mutation.state.status),
   },
 };

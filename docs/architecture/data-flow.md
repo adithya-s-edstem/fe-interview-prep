@@ -67,6 +67,6 @@ Page (interface) ─► application hook ─► TanStack Query ─► api client
   mutation shows as `failed`. Retry re-runs the same variables (same `clientId`).
 - Offline: TanStack Query's `onlineManager` pauses mutations while offline (status `queued`); they resume in order on
   reconnect via `resumePausedMutations()`.
-- Durability: `PersistQueryClientProvider` with a localStorage persister dehydrates unfinished mutations (in-flight
-  ones saved as paused) and the comments cache; on load the mutations are restored and resumed.
+- Durability: `PersistQueryClientProvider` with a localStorage persister dehydrates unsent mutations (queued, failed,
+  in-flight ones saved as paused) and the comments cache; on load the mutations are restored and resumed.
 - Domain owns the status model: `queued → sending → sent | failed`, `failed → sending` on retry.

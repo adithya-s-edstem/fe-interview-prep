@@ -9,8 +9,8 @@
   idempotency key and returns the existing comment for a repeated key.
 - Mutations use `scope: { id: 'comments' }` (serial, creation order) and defaults registered with
   `setMutationDefaults` so they can be rehydrated after a reload.
-- `PersistQueryClientProvider` + `createAsyncStoragePersister(localStorage)` persists unfinished mutations and the
-  comments cache; the provider's `onSuccess` calls `resumePausedMutations()`. (`createSyncStoragePersister` is
+- `PersistQueryClientProvider` + `createAsyncStoragePersister(localStorage)` persists unsent mutations (queued, in-flight,
+  failed) and the comments cache; the provider's `onSuccess` calls `resumePausedMutations()`. (`createSyncStoragePersister` is
   deprecated in TanStack Query v5.)
 - The persister saves on every change (`throttleTime: 0`) so a comment posted just before a refresh is not lost, and
   it stores in-flight sends as paused, so a send interrupted by a refresh is resumed and the idempotency key keeps it
