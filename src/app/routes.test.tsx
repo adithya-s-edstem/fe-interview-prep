@@ -1,9 +1,7 @@
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryRouter, RouterProvider } from 'react-router';
 import { describe, expect, it } from 'vitest';
-import { renderWithProviders } from '@/test/renderWithProviders';
-import { routes } from './routes';
+import { renderAppAt } from '@/test/renderAppAt';
 
 const questionPages = [
   { linkName: 'Shopping Cart', path: '/cart' },
@@ -12,12 +10,6 @@ const questionPages = [
   { linkName: 'Live Dashboard', path: '/dashboard' },
   { linkName: 'Comments with Offline Support', path: '/comments' },
 ];
-
-function renderAppAt(path: string) {
-  const router = createMemoryRouter(routes, { initialEntries: [path] });
-  renderWithProviders(<RouterProvider router={router} />);
-  return router;
-}
 
 describe('app routes', () => {
   it('shows a navigation with one link per question', () => {
