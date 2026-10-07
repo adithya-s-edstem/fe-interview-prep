@@ -1,0 +1,13 @@
+.button {
+  position: fixed;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
+  background: var(--color-accent);
+  padding: var(--space-2) var(--space-4);
+  color: var(--color-on-accent);
+  font: inherit;
+  cursor: pointer;
+}
