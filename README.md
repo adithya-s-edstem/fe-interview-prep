@@ -28,12 +28,12 @@ Open http://localhost:5173. The menu at the top links to one page per question; 
 
 ## Questions
 
-| #   | Question                      | PR link |
-| --- | ----------------------------- | ------- |
-| 1   | Shopping Cart                 |         |
-| 2   | Infinite Feed                 |         |
-| 3   | Kanban Board                  |         |
-| 4   | Live Dashboard                |         |
-| 5   | Comments with Offline Support |         |
+| #   | Question                      | PR link                                                              |
+| --- | ----------------------------- | -------------------------------------------------------------------- |
+| 1   | Shopping Cart                 | [#20](https://github.com/adithya-s-edstem/fe-interview-prep/pull/20) |
+| 2   | Infinite Feed                 |                                                                      |
+| 3   | Kanban Board                  |                                                                      |
+| 4   | Live Dashboard                |                                                                      |
+| 5   | Comments with Offline Support |                                                                      |
 
 Requirements, architecture and decision records live in [docs/](docs/README.md).

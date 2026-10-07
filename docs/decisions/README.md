@@ -19,6 +19,7 @@ Supersede a decision with a new record instead of editing the old one.
 | [0012](0012-money-in-cents.md) | Money as integer cents |
 | [0013](0013-css-modules.md) | CSS Modules, no component library |
 | [0014](0014-vitest-rtl.md) | Vitest + React Testing Library, no E2E |
+| [0015](0015-fast-check.md) | fast-check for property-based invariant tests |
 
 ## Template
 
