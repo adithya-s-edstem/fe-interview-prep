@@ -1,0 +1,45 @@
+.comment {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-4);
+}
+
+.text {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.footer:empty {
+  display: none;
+}
+
+.queued,
+.sending,
+.failed {
+  border-radius: var(--radius);
+  padding: 0 var(--space-2);
+  font-size: 0.875rem;
+}
+
+.queued {
+  background: #fff8c5;
+  color: #6b4e00;
+}
+
+.sending {
+  background: var(--color-surface);
+  color: #57606a;
+}
+
+.failed {
+  background: #ffebe9;
+  color: #a40e26;
+}
