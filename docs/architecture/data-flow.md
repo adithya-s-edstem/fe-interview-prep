@@ -45,12 +45,14 @@ Page (interface) ─► application hook ─► TanStack Query ─► api client
 - One `useQuery(['dashboard'])` with `refetchInterval: 5000` and `refetchIntervalInBackground: false` (stops while the
   tab is hidden; resumes on visibility).
 - No pile-up: a query has at most one fetch in flight; interval ticks while fetching do not start another.
-- Latest wins: the query's `structuralSharing` keeps the cached data when a response's `generatedAt` is not newer than
-  the cached one (domain `isNewer`), and otherwise applies `replaceEqualDeep`. A late response is dropped silently: no
-  error state, and the newer data stays on screen.
+- Latest wins: the query function compares each response with the cached snapshot (domain `keepNewerSnapshot`, built
+  on `isNewer` over `generatedAt`) and returns the cached one when the response is not newer. A late response is
+  dropped silently: no error state, and the newer data stays on screen. (A custom `structuralSharing` function was not
+  used because TanStack Query also runs it on every widget's `select` result, not only on the whole snapshot.)
 - Each widget subscribes through `select` to its own slice; structural sharing keeps unchanged slices referentially
   equal, and widgets are `memo`ized, so only widgets whose slice changed re-render.
-- Widget visibility: Zustand store `{ hidden: WidgetId[] }`, persisted.
+- Widget visibility and order: Zustand store `{ order: WidgetId[], hidden: WidgetId[] }`, persisted under
+  `fe-interview-prep:dashboard`; widgets are rearranged with dnd-kit (pointer and keyboard).
 
 ## Q5 Comments with Offline Support
 
