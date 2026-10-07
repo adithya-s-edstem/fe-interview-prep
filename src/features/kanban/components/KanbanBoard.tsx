@@ -4,11 +4,12 @@ import type { Board } from '../domain/Board';
 import { columnIds } from '../domain/ColumnId';
 import { dropTargetFor } from '../domain/dropTargetFor';
 import type { BoardActions } from '../hooks/BoardActions';
+import { BoardAnnouncementRegion } from './BoardAnnouncementRegion';
 import { BoardColumn } from './BoardColumn';
-import { boardDragAnnouncements } from './boardDragAnnouncements';
 import { cardsBeforeColumnsCollision } from './cardsBeforeColumnsCollision';
 import { FocusRequestProvider } from './FocusRequestProvider';
 import styles from './KanbanBoard.module.css';
+import { silentDragAnnouncements } from './silentDragAnnouncements';
 
 const pointerDragStartDistance = 5;
 
@@ -38,14 +39,16 @@ export function KanbanBoard({ board, actions }: KanbanBoardProps) {
       <DndContext
         sensors={sensors}
         collisionDetection={cardsBeforeColumnsCollision}
-        accessibility={{ announcements: boardDragAnnouncements(board) }}
+        accessibility={{ announcements: silentDragAnnouncements }}
         onDragEnd={moveDroppedCard}
       >
-        <div className={styles.board}>
-          {columnIds.map((column) => (
-            <BoardColumn key={column} column={column} board={board} actions={actions} />
-          ))}
-        </div>
+        <BoardAnnouncementRegion board={board}>
+          <div className={styles.board}>
+            {columnIds.map((column) => (
+              <BoardColumn key={column} column={column} board={board} actions={actions} />
+            ))}
+          </div>
+        </BoardAnnouncementRegion>
       </DndContext>
     </FocusRequestProvider>
   );

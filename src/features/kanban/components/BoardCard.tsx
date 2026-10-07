@@ -5,9 +5,11 @@ import type { Card } from '../domain/Card';
 import type { CardMove } from '../domain/CardMove';
 import type { CardMoveOption } from '../domain/CardMoveOption';
 import type { BoardActions } from '../hooks/BoardActions';
+import { useAnnounce } from '../hooks/useAnnounce';
 import { useFocusTarget } from '../hooks/useFocusTarget';
 import { useRequestFocus } from '../hooks/useRequestFocus';
 import styles from './BoardCard.module.css';
+import { cardMoveAnnouncement } from './cardMoveAnnouncement';
 import { CardForm } from './CardForm';
 import { CardMoveMenu } from './CardMoveMenu';
 import { focusTargetKeys } from './focusTargetKeys';
@@ -22,6 +24,7 @@ type BoardCardProps = {
 export function BoardCard({ card, moveOptions, actions, onDelete }: BoardCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const requestFocus = useRequestFocus();
+  const announce = useAnnounce();
   const editButtonRef = useFocusTarget<HTMLButtonElement>(focusTargetKeys.editButton(card.id));
   const moveButtonRef = useFocusTarget<HTMLButtonElement>(focusTargetKeys.moveButton(card.id));
   const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({
@@ -36,6 +39,7 @@ export function BoardCard({ card, moveOptions, actions, onDelete }: BoardCardPro
   function moveCard(move: CardMove) {
     actions.moveCard(move);
     requestFocus(focusTargetKeys.moveButton(card.id));
+    announce(cardMoveAnnouncement(card, move));
   }
 
   return (

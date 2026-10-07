@@ -135,6 +135,17 @@ describe('KanbanPage', () => {
     expect(screen.getByRole('button', { name: 'Move Second' })).toHaveFocus();
   });
 
+  it('tells screen reader users where a card went after a move from the Move menu', async () => {
+    const user = userEvent.setup();
+    render(<KanbanPage />);
+    await addCard(user, 'To do', 'Alpha');
+
+    await moveWithKeyboard(user, 'Alpha', 'Move to In progress');
+
+    const statusMessages = screen.getAllByRole('status').map((region) => region.textContent);
+    expect(statusMessages).toContain('Moved Alpha to In progress, position 1.');
+  });
+
   it("focuses the new card's Edit button after adding it", async () => {
     const user = userEvent.setup();
     render(<KanbanPage />);
