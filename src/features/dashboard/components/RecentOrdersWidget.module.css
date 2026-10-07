@@ -1,0 +1,21 @@
+.orders {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.order {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-1) 0;
+}
+
+.order:last-child {
+  border-bottom: none;
+}
+
+.total {
+  font-variant-numeric: tabular-nums;
+}
