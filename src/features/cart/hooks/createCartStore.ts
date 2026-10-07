@@ -28,7 +28,8 @@ export function createCartStore() {
         items: {},
         discountCode: null,
         add: (product) => set(({ items }) => ({ items: addProduct(items, product) })),
-        setQuantity: (productId, quantity) => set(({ items }) => ({ items: changeQuantity(items, productId, quantity) })),
+        setQuantity: (productId, quantity) =>
+          set(({ items }) => ({ items: changeQuantity(items, productId, quantity) })),
         remove: (productId) => set(({ items }) => ({ items: removeItem(items, productId) })),
         applyDiscountCode: (code) => set({ discountCode: code }),
       }),
