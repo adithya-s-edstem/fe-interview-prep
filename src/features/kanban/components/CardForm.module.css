@@ -1,0 +1,23 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.field {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-1) var(--space-2);
+  font: inherit;
+}
+
+.error {
+  margin: 0;
+  color: #cf222e;
+  font-size: 0.875rem;
+}
+
+.buttons {
+  display: flex;
+  gap: var(--space-2);
+}
