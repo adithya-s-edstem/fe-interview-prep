@@ -21,7 +21,7 @@ export function CartItemRow({ item: { product, quantity }, onQuantityChange, onR
         <button
           type="button"
           aria-label={`Decrease quantity of ${product.title}`}
-          disabled={quantity <= 1}
+          aria-disabled={quantity <= 1}
           onClick={() => onQuantityChange(product.id, quantity - 1)}
         >
           −
@@ -30,7 +30,7 @@ export function CartItemRow({ item: { product, quantity }, onQuantityChange, onR
         <button
           type="button"
           aria-label={`Increase quantity of ${product.title}`}
-          disabled={quantity >= product.stock}
+          aria-disabled={quantity >= product.stock}
           onClick={() => onQuantityChange(product.id, quantity + 1)}
         >
           +
