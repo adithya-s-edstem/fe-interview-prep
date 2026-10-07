@@ -4,11 +4,11 @@ import { handCream, lipBalm } from './testProducts';
 
 describe('removeItem', () => {
   it('takes only the removed product out of the cart', () => {
-    const cart = {
-      [lipBalm.id]: { product: lipBalm, quantity: 1 },
-      [handCream.id]: { product: handCream, quantity: 2 },
-    };
+    const cart = [
+      { product: lipBalm, quantity: 1 },
+      { product: handCream, quantity: 2 },
+    ];
 
-    expect(removeItem(cart, lipBalm.id)).toEqual({ [handCream.id]: { product: handCream, quantity: 2 } });
+    expect(removeItem(cart, lipBalm.id)).toEqual([{ product: handCream, quantity: 2 }]);
   });
 });

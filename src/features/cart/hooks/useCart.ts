@@ -7,7 +7,6 @@ import { createCartStore } from './createCartStore';
 export function useCart() {
   const [cartStore] = useState(createCartStore);
   const { items, discountCode, add, setQuantity, remove, applyDiscountCode } = useStore(cartStore);
-  const cartItems = Object.values(items);
-  const totals = calculateTotals(cartItems, discountPercentFor(discountCode));
-  return { cartItems, totals, discountCode, add, setQuantity, remove, applyDiscountCode };
+  const totals = calculateTotals(items, discountPercentFor(discountCode));
+  return { cartItems: items, totals, discountCode, add, setQuantity, remove, applyDiscountCode };
 }

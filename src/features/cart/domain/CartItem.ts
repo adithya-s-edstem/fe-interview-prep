@@ -5,4 +5,4 @@ export type CartItem = {
   quantity: number;
 };
 
-export type CartItems = Record<number, CartItem>;
+export type CartItems = readonly CartItem[];

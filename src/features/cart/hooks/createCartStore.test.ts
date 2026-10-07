@@ -6,7 +6,7 @@ describe('createCartStore', () => {
   it('starts with an empty cart and no discount code', () => {
     const { items, discountCode } = createCartStore().getState();
 
-    expect({ items, discountCode }).toEqual({ items: {}, discountCode: null });
+    expect({ items, discountCode }).toEqual({ items: [], discountCode: null });
   });
 
   it('gives a newly created store the items and discount code saved by an earlier one', () => {
@@ -18,7 +18,7 @@ describe('createCartStore', () => {
     const { items, discountCode } = createCartStore().getState();
 
     expect({ items, discountCode }).toEqual({
-      items: { [lipBalm.id]: { product: lipBalm, quantity: 2 } },
+      items: [{ product: lipBalm, quantity: 2 }],
       discountCode: 'SAVE10',
     });
   });
