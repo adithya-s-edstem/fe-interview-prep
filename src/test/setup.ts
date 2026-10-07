@@ -7,6 +7,12 @@ import { fakeScrollTo } from './fakeScrollTo';
 
 window.scrollTo = fakeScrollTo;
 
+globalThis.ResizeObserver = class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
+
 beforeAll(() => {
   server.listen({ onUnhandledRequest: 'error' });
 });
