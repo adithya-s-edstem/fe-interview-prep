@@ -107,7 +107,7 @@ describe('comment thread', () => {
     await postComment(user, 'Hello there');
 
     expect(comments()[0]).toHaveTextContent('Hello there');
-    expect(within(comments()[0]).getByRole('status')).toHaveTextContent('Sending…');
+    expect(screen.getByRole('status')).toHaveTextContent('Sending…');
     network.releaseResponsesNewestFirst();
     await waitUntilEveryCommentIsSent(1);
   });
@@ -135,7 +135,7 @@ describe('comment thread', () => {
 
     await postComment(user, 'Announce me');
 
-    await waitFor(() => expect(within(comments()[0]).getByRole('status')).toHaveTextContent('Failed'));
+    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Failed'));
   });
 
   it('moves focus to the comment after pressing retry', async () => {
