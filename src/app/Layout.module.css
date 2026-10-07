@@ -1,0 +1,42 @@
+.shell {
+  min-height: 100vh;
+}
+
+.header {
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding: var(--space-2) var(--space-4);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link,
+.activeLink {
+  display: inline-block;
+  border-radius: var(--radius);
+  padding: var(--space-1) var(--space-2);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.link:hover {
+  background: var(--color-hover);
+}
+
+.activeLink {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.main {
+  margin: 0 auto;
+  max-width: 960px;
+  padding: var(--space-4);
+}
