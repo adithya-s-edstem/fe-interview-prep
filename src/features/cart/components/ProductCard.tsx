@@ -18,7 +18,12 @@ export function ProductCard({ product, onAdd }: ProductCardProps) {
       </h3>
       <p className={styles.price}>{formatCents(product.priceCents)}</p>
       <p className={styles.stock}>{product.stock} in stock</p>
-      <button type="button" className={styles.addButton} onClick={() => onAdd(product)}>
+      <button
+        type="button"
+        className={styles.addButton}
+        aria-label={`Add ${product.title} to cart`}
+        onClick={() => onAdd(product)}
+      >
         Add to cart
       </button>
     </article>
