@@ -1,4 +1,4 @@
-import { act, screen, within } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { mockIsIntersecting } from 'react-intersection-observer/test-utils';
@@ -150,5 +150,33 @@ describe('FeedPage', () => {
     expect(screen.getByRole('link', { name: 'Post 25' })).toBeInTheDocument();
     expect(window.scrollY).toBe(1500);
     expect(requestedPages).toHaveLength(requestCountBeforeLeaving);
+  });
+
+  it('scrolls back to the top when the user presses back to top after scrolling down', async () => {
+    const user = userEvent.setup();
+    renderAppAt('/feed');
+    await screen.findByRole('link', { name: 'Post 1' });
+    expect(screen.queryByRole('button', { name: 'Back to top' })).not.toBeInTheDocument();
+    window.scrollTo(0, 900);
+
+    mockIsIntersecting(screen.getByRole('heading', { level: 1, name: 'Infinite Feed' }), false);
+    await user.click(await screen.findByRole('button', { name: 'Back to top' }));
+
+    expect(window.scrollY).toBe(0);
+  });
+
+  it('reloads the feed from the first page when the user pulls down at the top', async () => {
+    const requestedPages = recordPostsPageRequests();
+    renderAppAt('/feed');
+    await loadEveryPost();
+    scrollFeedEndIntoView(false);
+    window.scrollTo(0, 0);
+    const feed = screen.getByRole('region', { name: 'Infinite Feed' });
+
+    fireEvent.touchStart(feed, { touches: [{ clientY: 10 }] });
+    fireEvent.touchEnd(feed, { changedTouches: [{ clientY: 200 }] });
+
+    await waitFor(() => expect(postLinkNames()).toHaveLength(10));
+    expect(requestedPages.at(-1)).toEqual({ limit: '10', skip: '0' });
   });
 });
