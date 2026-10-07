@@ -1,7 +1,8 @@
-import { render, screen, within } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { describe, expect, it } from 'vitest';
+import { renderWithProviders } from '@/test/renderWithProviders';
 import { routes } from './routes';
 
 const questionPages = [
@@ -14,7 +15,7 @@ const questionPages = [
 
 function renderAppAt(path: string) {
   const router = createMemoryRouter(routes, { initialEntries: [path] });
-  render(<RouterProvider router={router} />);
+  renderWithProviders(<RouterProvider router={router} />);
   return router;
 }
 
