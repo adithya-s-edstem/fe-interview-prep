@@ -32,7 +32,7 @@ Open http://localhost:5173. The menu at the top links to one page per question; 
 | --- | ----------------------------- | -------------------------------------------------------------------- |
 | 1   | Shopping Cart                 | [#20](https://github.com/adithya-s-edstem/fe-interview-prep/pull/20) |
 | 2   | Infinite Feed                 | [#22](https://github.com/adithya-s-edstem/fe-interview-prep/pull/22) |
-| 3   | Kanban Board                  |                                                                      |
+| 3   | Kanban Board                  | [#21](https://github.com/adithya-s-edstem/fe-interview-prep/pull/21) |
 | 4   | Live Dashboard                |                                                                      |
 | 5   | Comments with Offline Support |                                                                      |
 
