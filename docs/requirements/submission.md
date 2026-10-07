@@ -49,7 +49,8 @@ Keep the README updated as each PR merges. It must contain:
 ## Submission checklist
 
 - **S-AC1** Public repo `fe-interview-prep` created, with a README.
-- **S-AC2** 5 branches, 5 PRs, all merged into `main`.
+- **S-AC2** 5 branches, 5 PRs, all merged into `main`. The docs PR and the setup PR are setup PRs on `main`, not
+  question PRs, and do not count towards the five.
 - **S-AC3** Every PR uses the description template and includes screenshots or a GIF.
 - **S-AC4** The README explains how to run the app and the tests.
 - **S-AC5** Tests, lint and type-check all pass.

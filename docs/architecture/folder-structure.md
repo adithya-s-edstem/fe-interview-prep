@@ -39,11 +39,15 @@ Each feature folder:
 
 ```
 features/<feature>/
-├── domain/            # pure functions + types, one per file
-├── application/       # hooks, stores, query options
-├── infrastructure/    # api client, zod schemas, msw handlers (mocks.ts)
-└── interface/         # <Feature>Page.tsx + components, *.module.css
+├── domain/            # domain layer: pure functions + types, one per file
+├── hooks/             # application layer: hooks, stores, query options
+├── services/          # infrastructure layer: api client, zod schemas, msw handlers (mocks.ts)
+├── components/        # interface layer: presentational components, *.module.css
+└── pages/             # interface layer: <Feature>Page.tsx, wires hooks to components
 ```
+
+Folder names are the ones the agent skills use; the layer each folder belongs to is defined in
+[layering.md](layering.md).
 
 ## Conventions
 

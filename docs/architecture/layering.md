@@ -6,12 +6,12 @@ Feature first, then layer. Dependencies point inward only.
 interface ──► application ──► domain ◄── infrastructure
 ```
 
-| Layer | Holds in this app | Must not |
+| Layer (folder) | Holds in this app | Must not |
 |---|---|---|
-| `domain` | Types, pure rules: cart totals and stock clamp, de-duplicating posts, board moves, latest-wins comparison, comment status transitions | import React, Zustand, TanStack Query, `fetch`, MSW |
-| `application` | Hooks that orchestrate a use case: `useCart`, `useFeed`, `useBoard`, `useDashboardPolling`, `usePostComment`; Zustand stores; query option factories | render JSX, call `fetch` directly |
-| `infrastructure` | API clients (`fetch` + Zod parse), MSW handlers for the feature, storage keys | contain business rules |
-| `interface` | Route pages, containers, presentational components, CSS Modules | fetch, read storage, or compute business values |
+| `domain` (`domain/`) | Types, pure rules: cart totals and stock clamp, de-duplicating posts, board moves, latest-wins comparison, comment status transitions | import React, Zustand, TanStack Query, `fetch`, MSW |
+| `application` (`hooks/`) | Hooks that orchestrate a use case: `useCart`, `useFeed`, `useBoard`, `useDashboardPolling`, `usePostComment`; Zustand stores; query option factories | render JSX, call `fetch` directly |
+| `infrastructure` (`services/`) | API clients (`fetch` + Zod parse), MSW handlers for the feature, storage keys | contain business rules |
+| `interface` (`components/`, `pages/`) | Route pages, containers, presentational components, CSS Modules | fetch, read storage, or compute business values |
 
 ## Rules
 

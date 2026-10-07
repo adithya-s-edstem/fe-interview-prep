@@ -15,7 +15,8 @@ One file per feature area. Acceptance criteria carry stable IDs (e.g. `Q1-AC3`) 
 
 ## Proposed milestones
 
-The assignment mandates merging Q1 to Q5 in order, each from the latest `main`, so the milestones are strictly sequential.
+The assignment mandates merging Q1 to Q5 in order, each from the latest `main`, so the milestones are strictly
+sequential.
 
 | # | Milestone | Covers | Depends on |
 |---|---|---|---|
@@ -27,9 +28,14 @@ The assignment mandates merging Q1 to Q5 in order, each from the latest `main`, 
 | M5 | Q5 Comments Offline | [comments-offline.md](comments-offline.md) | M4 |
 | M6 | Submission | [submission.md](submission.md) | M5 |
 
-Each question milestone (M1–M5) must land as **one** branch and **one** PR named as in
-[foundation.md#branches-and-prs](foundation.md#branches-and-prs). Tickets inside a milestone are work items on that
-single branch, not separate PRs.
+## Tickets per milestone
+
+- M0 has exactly one ticket: the setup ticket (app, lint, type-check, test, router, README with the PR table). It lands
+  on `main` through a setup PR, not a question PR.
+- Each of M1–M5 has exactly **one** ticket, which lands as **one** branch and **one** PR named as in
+  [foundation.md#branches-and-prs](foundation.md#branches-and-prs).
+- M6 has no ticket and no PR: it is the manual
+  [submission checklist](submission.md#submission-checklist), done after the Q5 PR merges (README links, video).
 
 "If you finish early" items are listed under **Optional** in each file. They are out of core scope and get no
 milestone until all of M1–M5 are merged.

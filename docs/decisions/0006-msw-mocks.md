@@ -5,7 +5,7 @@
 
 ## Decision
 Mock `/api/dashboard` and `/api/comments` with MSW request handlers, run by a service worker in the browser and by
-`setupServer` in tests. Handlers live in each feature's `infrastructure/`.
+`setupServer` in tests. Handlers live in each feature's `services/`.
 
 ## Why
 Requests are real `fetch` calls, so they show in the browser Network tab, which is needed to demonstrate Q4-AC4

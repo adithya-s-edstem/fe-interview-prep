@@ -7,7 +7,7 @@ Page (interface) ─► application hook ─► TanStack Query ─► api client
                  └► Zustand store (persist ─► localStorage)
 ```
 
-- Remote data: `useQuery` / `useInfiniteQuery` / `useMutation` with options built in `application/`. API clients parse
+- Remote data: `useQuery` / `useInfiniteQuery` / `useMutation` with options built in `hooks/`. API clients parse
   responses with Zod.
 - Local data: Zustand stores with `persist`; each store has a versioned storage key `fe-interview-prep:<feature>`.
 - Components subscribe with narrow selectors so unrelated state changes do not re-render them.
@@ -45,16 +45,19 @@ Page (interface) ─► application hook ─► TanStack Query ─► api client
 - One `useQuery(['dashboard'])` with `refetchInterval: 5000` and `refetchIntervalInBackground: false` (stops while the
   tab is hidden; resumes on visibility).
 - No pile-up: a query has at most one fetch in flight; interval ticks while fetching do not start another.
-- Latest wins: the query function rejects a response whose `generatedAt` is older than the cached one (domain
-  `isNewer`), so a late response never overwrites newer data.
+- Latest wins: the query's `structuralSharing` keeps the cached data when a response's `generatedAt` is not newer than
+  the cached one (domain `isNewer`), and otherwise applies `replaceEqualDeep`. A late response is dropped silently: no
+  error state, and the newer data stays on screen.
 - Each widget subscribes through `select` to its own slice; structural sharing keeps unchanged slices referentially
   equal, and widgets are `memo`ized, so only widgets whose slice changed re-render.
 - Widget visibility: Zustand store `{ hidden: WidgetId[] }`, persisted.
 
 ## Q5 Comments with Offline Support
 
-- MSW handler `GET/POST /api/comments`: 1–2 s random delay, ~20% failures, stores comments in memory keyed by a
-  client-generated `clientId` (idempotency key) — a repeated POST with a known `clientId` returns the existing comment.
+- MSW handler `GET/POST /api/comments`: 1–2 s random delay, ~20% failures, stores comments in `localStorage` keyed
+  by a client-generated `clientId` (idempotency key) — a repeated POST with a known `clientId` returns the existing
+  comment. The store survives a page reload, so a request that is re-sent after a refresh still creates exactly one
+  comment (Q5-AC5, Q5-AC6).
 - Posting: a `useMutation` registered via `queryClient.setMutationDefaults(['addComment'], …)` with
   `scope: { id: 'comments' }` so mutations run one at a time in creation order.
 - Optimistic UI: `onMutate` inserts `{ clientId, text, status: 'sending' }` into the `['comments']` cache; `onSuccess`
