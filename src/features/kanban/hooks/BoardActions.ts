@@ -9,7 +9,7 @@ export type CardToAdd = {
 };
 
 export type BoardActions = {
-  addCard: (cardToAdd: CardToAdd) => void;
+  addCard: (cardToAdd: CardToAdd) => CardId;
   editCard: (card: Card) => void;
   deleteCard: (cardId: CardId) => void;
   moveCard: (move: CardMove) => void;

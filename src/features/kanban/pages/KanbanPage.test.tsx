@@ -114,6 +114,69 @@ describe('KanbanPage', () => {
     expect(cardTitlesIn('To do')).toEqual(['Second', 'First']);
   });
 
+  it("keeps focus on the moved card's Move button after a move to another column", async () => {
+    const user = userEvent.setup();
+    render(<KanbanPage />);
+    await addCard(user, 'To do', 'Plan');
+
+    await moveWithKeyboard(user, 'Plan', 'Move to Done');
+
+    expect(screen.getByRole('button', { name: 'Move Plan' })).toHaveFocus();
+  });
+
+  it("keeps focus on the moved card's Move button after a reorder within its column", async () => {
+    const user = userEvent.setup();
+    render(<KanbanPage />);
+    await addCard(user, 'To do', 'First');
+    await addCard(user, 'To do', 'Second');
+
+    await moveWithKeyboard(user, 'Second', 'Move up');
+
+    expect(screen.getByRole('button', { name: 'Move Second' })).toHaveFocus();
+  });
+
+  it("focuses the new card's Edit button after adding it", async () => {
+    const user = userEvent.setup();
+    render(<KanbanPage />);
+
+    await addCard(user, 'In progress', 'Fresh');
+
+    expect(screen.getByRole('button', { name: 'Edit Fresh' })).toHaveFocus();
+  });
+
+  it("focuses the card's Edit button after saving it", async () => {
+    const user = userEvent.setup();
+    render(<KanbanPage />);
+    await addCard(user, 'To do', 'Draft');
+
+    await user.click(screen.getByRole('button', { name: 'Edit Draft' }));
+    await user.type(screen.getByLabelText('Title'), ' two');
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+
+    expect(screen.getByRole('button', { name: 'Edit Draft two' })).toHaveFocus();
+  });
+
+  it("focuses the next card's Edit button after deleting a card", async () => {
+    const user = userEvent.setup();
+    render(<KanbanPage />);
+    await addCard(user, 'To do', 'Old');
+    await addCard(user, 'To do', 'Next');
+
+    await user.click(screen.getByRole('button', { name: 'Delete Old' }));
+
+    expect(screen.getByRole('button', { name: 'Edit Next' })).toHaveFocus();
+  });
+
+  it("focuses the column's Add button after deleting its last card", async () => {
+    const user = userEvent.setup();
+    render(<KanbanPage />);
+    await addCard(user, 'Done', 'Only');
+
+    await user.click(screen.getByRole('button', { name: 'Delete Only' }));
+
+    expect(screen.getByRole('button', { name: 'Add card to Done' })).toHaveFocus();
+  });
+
   it('keeps every card, its column and its order after a page refresh', async () => {
     const user = userEvent.setup();
     const { unmount } = render(<KanbanPage />);

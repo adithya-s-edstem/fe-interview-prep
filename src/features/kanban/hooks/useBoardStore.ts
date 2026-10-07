@@ -16,8 +16,11 @@ export const useBoardStore = create<BoardState>()(
     (set) => ({
       ...emptyBoard,
       actions: {
-        addCard: ({ input, column }) =>
-          set((board) => addCard(board, { card: { id: crypto.randomUUID(), ...input }, column })),
+        addCard: ({ input, column }) => {
+          const card = { id: crypto.randomUUID(), ...input };
+          set((board) => addCard(board, { card, column }));
+          return card.id;
+        },
         editCard: (card) => set((board) => editCard(board, card)),
         deleteCard: (cardId) => set((board) => deleteCard(board, cardId)),
         moveCard: (move) => set((board) => moveCard(board, move)),
