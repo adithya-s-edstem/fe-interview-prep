@@ -1,14 +1,12 @@
 import type { Board } from './Board';
 import type { CardMove } from './CardMove';
 import { findCardColumn } from './findCardColumn';
-import { isColumnFull } from './isColumnFull';
+import { isMoveBlockedByLimit } from './isMoveBlockedByLimit';
 
-export function moveCard(board: Board, { cardId, toColumn, toIndex }: CardMove): Board {
+export function moveCard(board: Board, move: CardMove): Board {
+  const { cardId, toColumn, toIndex } = move;
   const fromColumn = findCardColumn(board, cardId);
-  if (fromColumn === undefined) {
-    return board;
-  }
-  if (fromColumn !== toColumn && isColumnFull(board, toColumn)) {
+  if (fromColumn === undefined || isMoveBlockedByLimit(board, move)) {
     return board;
   }
   const columnsWithoutCard = {

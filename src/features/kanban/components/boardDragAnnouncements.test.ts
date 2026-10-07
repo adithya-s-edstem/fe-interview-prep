@@ -45,6 +45,25 @@ describe('boardDragAnnouncements', () => {
     );
   });
 
+  it('says the card stayed in its column when it is dropped in a full column', () => {
+    const boardWithFullInProgress: Board = {
+      columns: { todo: [], inProgress: ['review', 'test', 'deploy'], done: ['gamma'] },
+      cards: {
+        review: { id: 'review', title: 'Peer review', description: '' },
+        test: { id: 'test', title: 'Test', description: '' },
+        deploy: { id: 'deploy', title: 'Deploy', description: '' },
+        gamma: { id: 'gamma', title: 'Gamma', description: '' },
+      },
+    };
+
+    const dropMessage = boardDragAnnouncements(boardWithFullInProgress).onDragEnd({
+      active: draggable('gamma'),
+      over: droppable('inProgress'),
+    });
+
+    expect(dropMessage).toBe('In progress is full, Gamma stayed in Done.');
+  });
+
   it('names the card whose move was cancelled', () => {
     expect(announcements.onDragCancel({ active: draggable('draft'), over: null })).toBe(
       'Moving Write draft was cancelled.',
