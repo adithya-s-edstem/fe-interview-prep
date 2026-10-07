@@ -62,10 +62,11 @@ Page (interface) ─► application hook ─► TanStack Query ─► api client
   comment (Q5-AC5, Q5-AC6).
 - Posting: a `useMutation` registered via `queryClient.setMutationDefaults(['addComment'], …)` with
   `scope: { id: 'comments' }` so mutations run one at a time in creation order.
-- Optimistic UI: `onMutate` inserts `{ clientId, text, status: 'sending' }` into the `['comments']` cache; `onSuccess`
-  replaces it with the server copy; `onError` marks it `failed`. Retry re-runs the same variables (same `clientId`).
+- Optimistic UI: unsent comments are read from `useMutationState` (variables + status) and merged with the
+  `['comments']` server list by `clientId`; `onSuccess` adds the server copy to the `['comments']` cache; a failed
+  mutation shows as `failed`. Retry re-runs the same variables (same `clientId`).
 - Offline: TanStack Query's `onlineManager` pauses mutations while offline (status `queued`); they resume in order on
   reconnect via `resumePausedMutations()`.
-- Durability: `PersistQueryClientProvider` with a localStorage persister dehydrates paused mutations and the comments
-  cache; on load the mutations are restored and resumed.
+- Durability: `PersistQueryClientProvider` with a localStorage persister dehydrates unfinished mutations (in-flight
+  ones saved as paused) and the comments cache; on load the mutations are restored and resumed.
 - Domain owns the status model: `queued → sending → sent | failed`, `failed → sending` on retry.
