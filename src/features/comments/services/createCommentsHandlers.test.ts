@@ -11,7 +11,7 @@ function post(body: object) {
 
 describe('mock comments API', () => {
   beforeEach(() => {
-    server.use(...createCommentsHandlers({ waitBeforeResponding: async () => undefined, shouldFail: () => false }));
+    server.use(...createCommentsHandlers({ waitBeforeResponding: () => Promise.resolve(), shouldFail: () => false }));
   });
 
   it('returns posted comments in the order they arrived', async () => {
@@ -34,7 +34,7 @@ describe('mock comments API', () => {
   });
 
   it('answers with a server error when the request is chosen to fail', async () => {
-    server.use(...createCommentsHandlers({ waitBeforeResponding: async () => undefined, shouldFail: () => true }));
+    server.use(...createCommentsHandlers({ waitBeforeResponding: () => Promise.resolve(), shouldFail: () => true }));
 
     const response = await post(comment);
 
