@@ -44,9 +44,9 @@ function createTestNetwork() {
 
 let network: ReturnType<typeof createTestNetwork>;
 
-function openCommentsPage() {
+function openCommentsPage(client = createCommentsQueryClient()) {
   return render(
-    <CommentsQueryProvider client={createCommentsQueryClient()}>
+    <CommentsQueryProvider client={client}>
       <CommentThread />
     </CommentsQueryProvider>,
   );
@@ -107,7 +107,7 @@ describe('comment thread', () => {
     await postComment(user, 'Hello there');
 
     expect(comments()[0]).toHaveTextContent('Hello there');
-    expect(comments()[0]).toHaveTextContent('Sending…');
+    expect(within(comments()[0]).getByRole('status')).toHaveTextContent('Sending…');
     network.releaseResponsesNewestFirst();
     await waitUntilEveryCommentIsSent(1);
   });
@@ -122,9 +122,50 @@ describe('comment thread', () => {
 
     expect(await screen.findByText('Failed')).toBeInTheDocument();
     expect(comments()[0]).toHaveTextContent('Try again');
-    await user.click(screen.getByRole('button', { name: 'Retry' }));
+    await user.click(screen.getByRole('button', { name: 'Retry "Try again"' }));
     await waitUntilEveryCommentIsSent(1);
     expect(await textsStoredOnServer()).toEqual(['Try again']);
+  });
+
+  it('announces a status change of a comment to screen readers', async () => {
+    const user = userEvent.setup();
+    openCommentsPage();
+    await waitFor(() => expect(screen.queryByText('Loading comments…')).not.toBeInTheDocument());
+    network.failNextRequest();
+
+    await postComment(user, 'Announce me');
+
+    await waitFor(() => expect(within(comments()[0]).getByRole('status')).toHaveTextContent('Failed'));
+  });
+
+  it('moves focus to the comment after pressing retry', async () => {
+    const user = userEvent.setup();
+    openCommentsPage();
+    await waitFor(() => expect(screen.queryByText('Loading comments…')).not.toBeInTheDocument());
+    network.failNextRequest();
+    await postComment(user, 'Focus me');
+    await screen.findByText('Failed');
+
+    await user.click(screen.getByRole('button', { name: 'Retry "Focus me"' }));
+
+    expect(comments()[0]).toHaveFocus();
+    await waitUntilEveryCommentIsSent(1);
+  });
+
+  it('forgets the failed attempt once its retry is confirmed', async () => {
+    const user = userEvent.setup();
+    const client = createCommentsQueryClient();
+    openCommentsPage(client);
+    await waitFor(() => expect(screen.queryByText('Loading comments…')).not.toBeInTheDocument());
+    network.failNextRequest();
+    await postComment(user, 'Forget the failure');
+    await screen.findByText('Failed');
+
+    await user.click(screen.getByRole('button', { name: 'Retry "Forget the failure"' }));
+    await waitUntilEveryCommentIsSent(1);
+
+    const failedAttempts = client.getMutationCache().findAll({ status: 'error' });
+    expect(failedAttempts).toHaveLength(0);
   });
 
   it('keeps a failed comment with its retry button after a page refresh', async () => {
@@ -140,7 +181,7 @@ describe('comment thread', () => {
     await waitFor(() => expect(comments()).toHaveLength(1));
     expect(comments()[0]).toHaveTextContent('Still here');
     expect(comments()[0]).toHaveTextContent('Failed');
-    await user.click(screen.getByRole('button', { name: 'Retry' }));
+    await user.click(screen.getByRole('button', { name: 'Retry "Still here"' }));
     await waitUntilEveryCommentIsSent(1);
     expect(await textsStoredOnServer()).toEqual(['Still here']);
   });
@@ -207,7 +248,7 @@ describe('comment thread', () => {
     setBrowserOnline(false);
     await postComment(user, 'Frist draft');
 
-    await user.click(screen.getByRole('button', { name: 'Edit' }));
+    await user.click(screen.getByRole('button', { name: 'Edit "Frist draft"' }));
     const editField = screen.getByRole('textbox', { name: 'Edit comment' });
     await user.clear(editField);
     await user.type(editField, 'First draft');
@@ -218,5 +259,33 @@ describe('comment thread', () => {
     setBrowserOnline(true);
     await waitUntilEveryCommentIsSent(1);
     expect(await textsStoredOnServer()).toEqual(['First draft']);
+  });
+
+  it('moves focus into the edit box when editing starts and back to the edit button after saving', async () => {
+    const user = userEvent.setup();
+    openCommentsPage();
+    await waitFor(() => expect(screen.queryByText('Loading comments…')).not.toBeInTheDocument());
+    setBrowserOnline(false);
+    await postComment(user, 'Draft');
+
+    await user.click(screen.getByRole('button', { name: 'Edit "Draft"' }));
+    expect(screen.getByRole('textbox', { name: 'Edit comment' })).toHaveFocus();
+    await user.type(screen.getByRole('textbox', { name: 'Edit comment' }), ' two');
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+
+    expect(screen.getByRole('button', { name: 'Edit "Draft two"' })).toHaveFocus();
+  });
+
+  it('returns focus to the edit button after cancelling an edit', async () => {
+    const user = userEvent.setup();
+    openCommentsPage();
+    await waitFor(() => expect(screen.queryByText('Loading comments…')).not.toBeInTheDocument());
+    setBrowserOnline(false);
+    await postComment(user, 'Unchanged');
+
+    await user.click(screen.getByRole('button', { name: 'Edit "Unchanged"' }));
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(screen.getByRole('button', { name: 'Edit "Unchanged"' })).toHaveFocus();
   });
 });

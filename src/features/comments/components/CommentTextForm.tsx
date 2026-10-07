@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useEffect, useId } from 'react';
 import { useForm } from 'react-hook-form';
 import styles from './CommentTextForm.module.css';
 
@@ -6,15 +6,28 @@ type CommentTextFormProps = {
   label: string;
   submitLabel: string;
   defaultText?: string;
+  focusOnOpen?: boolean;
   onSubmit: (text: string) => void;
   onCancel?: () => void;
 };
 
 type CommentTextFields = { text: string };
 
-export function CommentTextForm({ label, submitLabel, defaultText = '', onSubmit, onCancel }: CommentTextFormProps) {
+export function CommentTextForm({
+  label,
+  submitLabel,
+  defaultText = '',
+  focusOnOpen = false,
+  onSubmit,
+  onCancel,
+}: CommentTextFormProps) {
   const fieldId = useId();
-  const { register, handleSubmit, reset } = useForm<CommentTextFields>({ defaultValues: { text: defaultText } });
+  const { register, handleSubmit, reset, setFocus } = useForm<CommentTextFields>({
+    defaultValues: { text: defaultText },
+  });
+  useEffect(() => {
+    if (focusOnOpen) setFocus('text');
+  }, [focusOnOpen, setFocus]);
   const submitText = handleSubmit(({ text }) => {
     onSubmit(text);
     reset();
